@@ -337,6 +337,8 @@ func parseProviderInfo(o *options.Options, msgs []string) []string {
 				p.JWTKey = signKey
 			}
 		}
+	case *providers.ZenDeskProvider:
+		p.SetSubdomain(o.ZenDeskSubdomain)
 	}
 	return msgs
 }
