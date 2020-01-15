@@ -903,6 +903,12 @@ func (p *OAuthProxy) getAuthenticatedSession(rw http.ResponseWriter, req *http.R
 
 // addHeadersForProxying adds the appropriate headers the request / response for proxying
 func (p *OAuthProxy) addHeadersForProxying(rw http.ResponseWriter, req *http.Request, session *sessionsapi.SessionState) {
+	protocol := strings.ToLower(strings.SplitN(req.Proto, "/", 2)[0])
+	if req.TLS != nil {
+		protocol = protocol + "s"
+	}
+	req.Header["X-Forwarded-Proto"] = []string{protocol}
+
 	if p.PassBasicAuth {
 		if p.PreferEmailToUser && session.Email != "" {
 			req.SetBasicAuth(session.Email, p.BasicAuthPassword)
